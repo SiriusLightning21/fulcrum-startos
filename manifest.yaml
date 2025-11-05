@@ -12,7 +12,7 @@ build: ['make']
 description:
   short: A fast & nimble SPV Server for BTC, BCH and LTC
   long: |
-    A fast & nimble SPV server for Bitcoin, Bitcoin Cash and Litecoin.
+    A fast & nimble SPV server for Bitcoin, Bitcoin Cash and Litecoin created by Calin Culianu.
 assets:
   license: LICENSE
   icon: icon.png
