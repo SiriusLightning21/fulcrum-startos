@@ -24,6 +24,7 @@ main:
   args: []
   mounts:
     main: /data
+  sigterm-timeout: 5m
 health-checks:
   electrum:
     name: Fulcrum RPC Interface

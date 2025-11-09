@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -78,10 +78,14 @@ fi
 
 # Execute Fulcrum with proper argument order
 echo "DEBUG: FULCRUM_ARGS='$FULCRUM_ARGS'"
+
+# Send all stdout/stderr through tee once, to both console and log
+exec > >(tee -a /data/fulcrum.log) 2>&1
+
 if [ -n "$FULCRUM_ARGS" ]; then
     echo "DEBUG: Executing: Fulcrum $FULCRUM_ARGS /data/fulcrum.conf"
-    exec tini -p SIGTERM -- Fulcrum $FULCRUM_ARGS /data/fulcrum.conf | tee /data/fulcrum.log
+    exec tini -p SIGTERM -- Fulcrum $FULCRUM_ARGS /data/fulcrum.conf
 else
     echo "DEBUG: Executing: Fulcrum /data/fulcrum.conf"
-    exec tini -p SIGTERM -- Fulcrum /data/fulcrum.conf | tee /data/fulcrum.log
+    exec tini -p SIGTERM -- Fulcrum /data/fulcrum.conf
 fi
