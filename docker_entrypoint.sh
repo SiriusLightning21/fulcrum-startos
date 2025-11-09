@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -22,9 +22,8 @@ if [ "$1" = "Fulcrum" ] ; then
   set -- "$@" -D "$DATA_DIR" -c "$SSL_CERTFILE" -k "$SSL_KEYFILE"
 fi
 
-# todo
-# echo 'db/' > /data/.backupignore
-# echo 'core' >> /data/.backupignore
+# ignore database files for backups
+echo 'fulc2_db/' > /data/.backupignore
 
 TOR_ADDRESS=$(yq '.electrum-tor-address' /data/start9/config.yaml)
 
@@ -79,10 +78,14 @@ fi
 
 # Execute Fulcrum with proper argument order
 echo "DEBUG: FULCRUM_ARGS='$FULCRUM_ARGS'"
+
+# Send all stdout/stderr through tee once, to both console and log
+exec > >(tee -a /data/fulcrum.log) 2>&1
+
 if [ -n "$FULCRUM_ARGS" ]; then
     echo "DEBUG: Executing: Fulcrum $FULCRUM_ARGS /data/fulcrum.conf"
-    exec tini -p SIGTERM -- Fulcrum $FULCRUM_ARGS /data/fulcrum.conf | tee /data/fulcrum.log
+    exec tini -p SIGTERM -- Fulcrum $FULCRUM_ARGS /data/fulcrum.conf
 else
     echo "DEBUG: Executing: Fulcrum /data/fulcrum.conf"
-    exec tini -p SIGTERM -- Fulcrum /data/fulcrum.conf | tee /data/fulcrum.log
+    exec tini -p SIGTERM -- Fulcrum /data/fulcrum.conf
 fi

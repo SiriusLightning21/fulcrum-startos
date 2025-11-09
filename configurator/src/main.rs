@@ -46,8 +46,7 @@ struct AdvancedConfig {
     bitcoind_clients: Option<u16>,
     worker_threads: Option<u16>,
     db_mem: Option<u16>,
-    db_max_open_files: Option<u16>,
-    utxo_cache: Option<u16>,
+    db_max_open_files: Option<u16>,    
 }
 
 #[derive(serde::Deserialize)]
@@ -155,13 +154,10 @@ fn main() -> Result<(), anyhow::Error> {
             );
         }
 
-        let mut worker_threads: String = "".to_string();
-        if config.advanced.worker_threads.is_some() {
-            worker_threads = format!(
-                "worker_threads = {}",
-                config.advanced.worker_threads.unwrap()
-            );
-        }
+        let worker_threads = format!(
+            "worker_threads = {}",
+            config.advanced.worker_threads.unwrap_or(0)
+        );
 
         let mut db_mem: String = "".to_string();
         if config.advanced.db_mem.is_some() {
@@ -179,14 +175,6 @@ fn main() -> Result<(), anyhow::Error> {
             );
         }
 
-        let mut utxo_cache: String = "".to_string();
-        if config.advanced.utxo_cache.is_some() {
-            utxo_cache = format!(
-                "utxo_cache = {}",
-                config.advanced.utxo_cache.unwrap()
-            );
-        }
-
         write!(
             outfile,
             include_str!("fulcrum.conf.template"),
@@ -199,7 +187,6 @@ fn main() -> Result<(), anyhow::Error> {
             worker_threads = worker_threads,
             db_mem = db_mem,
             db_max_open_files = db_max_open_files,
-            utxo_cache = utxo_cache,
         )?;
     }
 
