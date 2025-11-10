@@ -1,6 +1,6 @@
 # Fulcrum
 
-Is a fast and efficient Electrum server that connects to your Bitcoin node, allowing you to use your favorite wallets without relying on public servers.
+Is a fast and efficient Electrum server that connects to your node, allowing you to use your favorite wallets without relying on public servers.
 
 ## Configuration
 
